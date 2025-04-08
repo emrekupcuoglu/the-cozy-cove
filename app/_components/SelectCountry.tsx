@@ -1,19 +1,21 @@
-import { getCountries } from "@/app/_lib/data-service";
+"use client";
 
-// Let's imagine your colleague already built this component 😃
+import { useFormStatus } from "react-dom";
 
-async function SelectCountry({
+function SelectCountry({
   defaultCountry,
   name,
   id,
   className,
+  countries,
 }: {
   defaultCountry: string;
   name: string;
   id: string;
   className: string;
+  countries: any[];
 }) {
-  const countries: any[] = await getCountries();
+  const { pending } = useFormStatus();
   const flag =
     countries.find((country) => country.name === defaultCountry)?.flag ?? "";
 
@@ -23,7 +25,8 @@ async function SelectCountry({
       id={id}
       // Here we use a trick to encode BOTH the country name and the flag into the value. Then we split them up again later in the server action
       defaultValue={`${defaultCountry}%${flag}`}
-      className={className}
+      className={`${className} disabled:text-gray-300" disabled:cursor-not-allowed disabled:bg-gray-500`}
+      disabled={pending}
     >
       <option value="">Select country...</option>
       {countries.map((c) => (

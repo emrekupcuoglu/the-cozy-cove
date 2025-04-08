@@ -1,14 +1,33 @@
-import SelectCountry from "@/app/_components/SelectCountry";
 import UpdateProfileForm from "@/app/_components/UpdateProfileForm";
+import { auth } from "@/app/_lib/auth";
+import { getCountries, getGuest } from "@/app/_lib/data-service";
 import { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Update profile",
 };
 
-const nationality = "portugal";
-export default function Page() {
-  // CHANGE
+export default async function Page() {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.email) redirect("/login");
+  const guestPromise = getGuest(session.user.email);
+  const countriesPromise = getCountries();
+
+  const [guestResult, countriesResult] = await Promise.allSettled([
+    guestPromise,
+    countriesPromise,
+  ]);
+
+  if (guestResult.status === "rejected") notFound();
+
+  const guest = guestResult.value;
+  const countries =
+    countriesResult.status === "fulfilled" ? countriesResult.value : [];
+
+  if (!guest) redirect("/login");
+  const { nationality } = guest;
 
   return (
     <div>
@@ -21,14 +40,10 @@ export default function Page() {
         faster and smoother. See you soon!
       </p>
 
-      <UpdateProfileForm>
-        <SelectCountry
-          name="nationality"
-          id="nationality"
-          className="w-full rounded-sm bg-primary-200 px-5 py-3 text-primary-800 shadow-sm"
-          defaultCountry={nationality}
-        />
-      </UpdateProfileForm>
+      <UpdateProfileForm
+        guest={guest}
+        countries={countries}
+      ></UpdateProfileForm>
     </div>
   );
 }
