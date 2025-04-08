@@ -1,10 +1,15 @@
 "use client";
-import { max } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { useReservationContext } from "../_contexts/ReservationContext";
-import { Tables } from "../database.types";
-import { notFound } from "next/navigation";
+
 import { User } from "next-auth";
 import Image from "next/image";
+import { notFound } from "next/navigation";
+import { useTransition } from "react";
+import { createBookingAction } from "../_lib/actions";
+import { Tables } from "../_lib/supabase/database.types";
+import SpinnerMini from "./SpinnerMini";
+import SubmitButton from "./SubmitButton";
 
 function ReservationForm({
   cabin,
@@ -13,12 +18,32 @@ function ReservationForm({
   cabin: Tables<"cabins">;
   user: User;
 }) {
-  // CHANGE
-  const { maxCapacity } = cabin;
+  const [pending, startTransition] = useTransition();
+  const { maxCapacity, regularPrice, discount, id: cabinId } = cabin;
 
   if (!maxCapacity) notFound();
 
   const { range } = useReservationContext();
+
+  const startDate = range?.from;
+  const endDate = range?.to;
+
+  const numNights =
+    endDate && startDate && differenceInDays(endDate, startDate);
+
+  const cabinPrice =
+    Number(numNights) * (Number(regularPrice) - Number(discount));
+
+  const bookingData = { startDate, endDate, numNights, cabinPrice, cabinId };
+
+  const createBookingWithDataAction = createBookingAction.bind(
+    null,
+    bookingData,
+  );
+
+  function isButtonDisabled() {
+    return !startDate || !endDate || !numNights || !cabinPrice;
+  }
 
   return (
     <div className="scale-[1.01]">
@@ -40,7 +65,14 @@ function ReservationForm({
         </div>
       </div>
 
-      <form className="flex flex-col gap-5 bg-primary-900 px-16 py-10 text-lg">
+      <form
+        action={(formData) => {
+          startTransition(async () => {
+            await createBookingWithDataAction(formData);
+          });
+        }}
+        className="flex flex-col gap-5 bg-primary-900 px-16 py-10 text-lg"
+      >
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
@@ -75,9 +107,16 @@ function ReservationForm({
         <div className="flex items-center justify-end gap-6">
           <p className="text-base text-primary-300">Start by selecting dates</p>
 
-          <button className="bg-accent-500 px-8 py-4 font-semibold text-primary-800 transition-all hover:bg-accent-600 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
+          {/* <button className="bg-accent-500 px-8 py-4 font-semibold text-primary-800 transition-all hover:bg-accent-600 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
             Reserve now
-          </button>
+          </button> */}
+
+          <SubmitButton
+            disabled={isButtonDisabled()}
+            fallback={<SpinnerMini />}
+          >
+            Reserve now
+          </SubmitButton>
         </div>
       </form>
     </div>
