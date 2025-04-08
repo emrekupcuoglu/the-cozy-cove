@@ -1,9 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase/supabase";
-import { Tables } from "../database.types";
-import { TablesInsert } from "../database.types";
-import { TablesUpdate } from "../database.types";
-import { notFound } from "next/navigation";
+
+import { Tables, TablesInsert, TablesUpdate } from "./supabase/database.types";
 
 /////////////
 // GET
@@ -113,7 +111,7 @@ export async function getGuest(
 export async function getBooking(id: number) {
   const { data, error, count } = await supabase
     .from("bookings")
-    .select("*")
+    .select("*, cabins(maxCapacity)")
     .eq("id", id)
     .single();
 
