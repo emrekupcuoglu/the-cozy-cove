@@ -1,10 +1,4 @@
-import { NextConfig } from "next";
-import {
-  MiddlewareConfig,
-  NextMiddleware,
-  NextRequest,
-  NextResponse,
-} from "next/server";
+import { MiddlewareConfig } from "next/server";
 
 // export { auth as middleware } from "@/app/_lib/auth";
 
