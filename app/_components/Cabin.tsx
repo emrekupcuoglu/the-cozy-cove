@@ -1,7 +1,7 @@
 import Image from "next/image";
 import TextExpander from "./TextExpander";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
-import { Tables } from "../database.types";
+import { Tables } from "../_lib/supabase/database.types";
 
 function Cabin({ cabin }: { cabin: Tables<"cabins"> }) {
   const { name, maxCapacity, image, description } = cabin;

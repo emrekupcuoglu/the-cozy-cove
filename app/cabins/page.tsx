@@ -1,10 +1,9 @@
 import { Metadata } from "next";
 
-import CabinList from "../_components/CabinList";
 import { Suspense } from "react";
+import CabinList from "../_components/CabinList";
 import CabinListSkeleton from "../_components/CabinListSkeleton";
 import Filter from "../_components/Filter";
-import { getCabins } from "../_lib/data-service";
 import ReservationReminder from "../_components/ReservationReminder";
 
 export const metadata: Metadata = { title: "Cabins" };
@@ -19,8 +18,6 @@ export const revalidate = 3600;
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   // searchParams makes the page dynamic so revalidate will be ignored because the page is already dynamic.
-
-  console.log("searchParams", searchParams);
 
   const filter = searchParams?.capacity ?? "all";
 

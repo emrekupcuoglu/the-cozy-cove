@@ -1,14 +1,11 @@
 import { notFound } from "next/navigation";
-import {
-  getBookedDatesByCabinId,
-  getCabin,
-  getSettings,
-} from "../_lib/data-service";
-import { Tables } from "../database.types";
-import DateSelector from "./DateSelector";
-import ReservationForm from "./ReservationForm";
+import { getBookedDatesByCabinId, getSettings } from "../_lib/data-service";
+
 import { auth } from "../_lib/auth";
+import { Tables } from "../_lib/supabase/database.types";
+import DateSelector from "./DateSelector";
 import LoginMessage from "./LoginMessage";
+import ReservationForm from "./ReservationForm";
 
 async function Reservation({ cabin }: { cabin: Tables<"cabins"> }) {
   // We passed the cabin from the page.tsx because getCabin doesn't use the native fetch API but instead uses the custom supabase client, because of this request memoization is not possible. We can either use the React's cache function or just pass the cabin as a prop.

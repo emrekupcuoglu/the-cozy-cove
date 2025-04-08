@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 
 import image1 from "@/public/about-1.jpg";
-import image2 from "@/public/about-2.jpg";
 import Image from "next/image";
 import { getCabins } from "../_lib/data-service";
 
@@ -80,7 +79,7 @@ export default async function Page() {
             blending the timeless beauty of the mountains with the personal
             touch only a family business can offer. Here, you&apos;re not just a
             guest; you&apos;re part of our extended family. So join us at The
-            Wild Oasis soon, where tradition meets tranquility, and every visit
+            Cozy Cove soon, where tradition meets tranquility, and every visit
             is like coming home.
           </p>
 
