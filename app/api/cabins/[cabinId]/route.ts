@@ -4,10 +4,13 @@ import { getBookedDatesByCabinId, getCabin } from "@/app/_lib/data-service";
 
 // To define the request types we create function corresponding to the HTTP methods e.g. GET or POST
 
-export async function GET(
-  request: Request,
-  { params: { cabinId } }: { params: { cabinId: string } },
-) {
+export async function GET(request: Request, props: { params: Promise<{ cabinId: string }> }) {
+  const params = await props.params;
+
+  const {
+    cabinId
+  } = params;
+
   // const [{ error, data: cabin }, bookedDates] = await Promise.all([
   const [cabin, bookedDates] = await Promise.all([
     getCabin(Number(cabinId)),

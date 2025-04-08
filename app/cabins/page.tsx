@@ -16,7 +16,8 @@ export const metadata: Metadata = { title: "Cabins" };
 // export const revalidate = time * 5;
 export const revalidate = 3600;
 
-export default async function Page({ searchParams }: { searchParams: any }) {
+export default async function Page(props: { searchParams: Promise<any> }) {
+  const searchParams = await props.searchParams;
   // searchParams makes the page dynamic so revalidate will be ignored because the page is already dynamic.
 
   const filter = searchParams?.capacity ?? "all";

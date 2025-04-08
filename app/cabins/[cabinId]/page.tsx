@@ -8,11 +8,17 @@ import { Suspense } from "react";
 
 export const revalidate = 3600;
 
-export async function generateMetadata({
-  params: { cabinId },
-}: {
-  params: { cabinId: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ cabinId: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    cabinId
+  } = params;
+
   const cabin = await getCabin(Number(cabinId));
   if (!cabin) return notFound();
 
@@ -30,11 +36,17 @@ export async function generateStaticParams() {
 }
 
 // Any page or layout gets access to the params prop
-export default async function Page({
-  params: { cabinId },
-}: {
-  params: { cabinId: string };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{ cabinId: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    cabinId
+  } = params;
+
   const cabin = await getCabin(Number(cabinId));
 
   if (!cabin) return notFound();

@@ -6,11 +6,17 @@ import { auth } from "@/app/_lib/auth";
 import { getBooking } from "@/app/_lib/data-service";
 import { redirect } from "next/navigation";
 
-export default async function Page({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   // CHANGE
 
   const session = await auth();
