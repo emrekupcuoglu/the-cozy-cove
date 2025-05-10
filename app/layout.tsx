@@ -3,6 +3,8 @@
 // This layout wrap the entire application so it will apply to every single route in the application. So therefore it needs to contain the <html> and the <body> tag.
 // So the global HTML structure will come from this RootLayout, so whatever we write in the html such as the lang attribute this will make it into the server side rendered HTML
 
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Metadata } from "next";
 import "@/app/_styles/globals.css";
 // With Next.js we can self host any google font easily by using the next/font package. Thanks to this we do not need to send a request to the google servers. With this instead of downloading the font from a google server we are serving it ourself, this improves the performance, and it even is good for privacy because we are not sending a request to google servers, and might be required by GDPR.
@@ -43,6 +45,8 @@ function RootLayout({ children }: { children: React.ReactNode }) {
               <ReservationProvider>{children}</ReservationProvider>
             </main>
           </div>
+          <Analytics />
+          <SpeedInsights />
         </body>
       </SessionProvider>
     </html>
